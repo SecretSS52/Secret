@@ -1,0 +1,77 @@
+using System;
+using System.Diagnostics;
+using System.IO;
+
+namespace DebugMessagesExample
+{
+    internal class Program
+    {
+        static void Main()
+        {
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
+
+          
+
+            Trace.Listeners.Clear();
+
+            TextWriterTraceListener consoleListener = new TextWriterTraceListener(Console.Out);
+
+            TextWriterTraceListener fileListener = new TextWriterTraceListener("debug_log.txt");
+
+            Trace.Listeners.Add(consoleListener);
+            Trace.Listeners.Add(fileListener);
+
+            Trace.AutoFlush = true;
+
+            Trace.WriteLine("TRACE: Программа запущена");
+            Debug.WriteLine("DEBUG: Программа запущена в режиме отладки");
+
+            Console.WriteLine("Программа проверки скидки");
+            Console.WriteLine();
+
+            int price = 1000;
+            int discount = 150;
+
+
+            Trace.WriteLine("Цена товара: " + price);
+            Trace.WriteLine("Скидка: " + discount);
+
+            int finalPrice = price - discount;
+
+            Trace.WriteLine("Итоговая цена: " + finalPrice);
+
+            Console.WriteLine("Цена товара: " + price);
+            Console.WriteLine("Скидка: " + discount);
+            Console.WriteLine("Итоговая цена: " + finalPrice);
+
+           // ВЫЗОВ ОТЛАДОЧНОГО СООБЩЕНИЯ ПО УСЛОВИЮ
+     
+
+            Trace.WriteLineIf(discount > 100, "TRACE: Скидка больше 100");
+
+            Debug.WriteLineIf(finalPrice < 900, "DEBUG: Итоговая цена меньше 900");
+
+             // 5. ПРОВЕРКА УСЛОВИЯ ЧЕРЕЗ Debug.Assert
+          
+
+            Debug.Assert(finalPrice >= 0, "Ошибка: итоговая цена не может быть отрицательной");
+
+            
+            // 6. ВЫЗОВ СИСТЕМНОГО ОКНА ОТЛАДКИ
+            bool needDebugWindow = false;
+
+            if (needDebugWindow == true)
+            {
+                Debugger.Break();
+            }
+
+            Console.WriteLine();
+            Console.WriteLine("Отладочные сообщения записаны в консоль и файл debug_log.txt");
+
+            Trace.WriteLine("TRACE: Программа завершена");
+            Debug.WriteLine("DEBUG: Программа завершена");
+
+            Console.ReadLine();
+        }
+    }
+}

@@ -1,0 +1,110 @@
+using System;
+using System.Diagnostics;
+
+namespace DebugCalculator
+{
+    internal class Program
+    {
+        static void Main()
+        {
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
+
+
+            // ТОЧКА ОСТАНОВА №1: ОБЫЧНАЯ ТОЧКА ОСТАНОВА
+
+            Console.WriteLine("Простой калькулятор");//сюда
+
+            int a = 10;
+            int b = 5;
+
+            
+            // ТОЧКА ОСТАНОВА №2: IMMEDIATE WINDOW / ОКНО ИНТЕРПРЕТАЦИИ
+            
+          
+            int sum = a + b; //сюда тож обычную
+
+            Console.WriteLine("Сложение: " + sum);
+
+            
+            // ТОЧКА ОСТАНОВА №3: ПОШАГОВОЕ ВЫПОЛНЕНИЕ
+            
+            // Что нажимать:
+            // F10 — выполнить строку, НЕ заходя внутрь метода.
+            // F11 — зайти внутрь метода Multiply.
+            // Shift + F11 — выйти из метода обратно в Main.
+            
+            int multiplyResult = Multiply(a, b);//сюда тож обычную
+
+            Console.WriteLine("Умножение: " + multiplyResult);
+
+            // ТОЧКА ОСТАНОВА №4: УСЛОВНАЯ ТОЧКА ОСТАНОВА
+
+            for (int i = 1; i <= 5; i++)
+            {
+                Console.WriteLine("i = " + i);//сюда  Условие: i == 3
+            }
+
+            // ТОЧКА ОСТАНОВА №5: HIT COUNT / КОЛИЧЕСТВО ПОПАДАНИЙ
+            // ПКМ по точке останова -> Conditions / Условия.
+            // Выбери Hit Count / Количество попаданий. например 4
+
+            for (int j = 1; j <= 6; j++)
+            {
+                Console.WriteLine("j = " + j);//сюда  Условие: 4
+            }
+
+            int number = 7;
+
+            
+            // ТОЧКА ОСТАНОВА №6: ТОЧКА ОСТАНОВА С ДЕЙСТВИЕМ
+            
+            // Поставить галочку: Продолжить выполнение
+            
+            Console.WriteLine("Проверяем число");//сюда действие Сейчас проверяется число: {number}
+
+            if (number > 5)
+            {
+                Console.WriteLine("Число больше 5");
+            }
+            else
+            {
+                Console.WriteLine("Число меньше или равно 5");
+            }
+
+            
+            // ТОЧКА ОСТАНОВА №7: WATCH / ОКНО НАБЛЮДЕНИЯ
+            
+        
+        
+            // Как открыть:
+            // Debug -> Windows -> контрольные значения1
+
+            int finalResult = sum + multiplyResult + number;//сюда действие
+
+            Console.WriteLine("Итоговый результат: " + finalResult);
+
+            
+            int counter = 0;
+
+            for (int k = 0; k < 100000; k++)
+            {
+                counter++;
+            }
+
+          
+
+            Console.WriteLine("Счётчик: " + counter);
+           
+            Console.WriteLine("Конец программы");
+            Console.ReadLine();
+        }
+
+        static int Multiply(int x, int y)
+        {
+
+            int result = x * y;
+
+            return result;
+        }
+    }
+}

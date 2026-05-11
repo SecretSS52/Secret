@@ -1,0 +1,91 @@
+# Название workflow. Оно будет отображаться во вкладке Actions на GitHub
+name: CI-CD AutoServiceCalculator
+
+# Условия запуска workflow
+on:
+  # Запуск при отправке изменений в удалённый репозиторий
+  push:
+    branches:
+      # Workflow запустится, если push сделан в ветку main
+      - main
+
+      # Workflow также запустится, если push сделан в ветку master
+      - master
+
+  # Запуск при создании или обновлении Pull Request
+  pull_request:
+    branches:
+      # Проверка Pull Request в ветку main
+      - main
+
+      # Проверка Pull Request в ветку master
+      - master
+
+  # Возможность запустить workflow вручную через кнопку на GitHub
+  workflow_dispatch:
+
+# Список задач, которые будет выполнять GitHub Actions
+jobs:
+  # Название задачи
+  build-test-publish:
+
+    # Операционная система, на которой будет выполняться workflow
+    # windows-latest означает последнюю доступную Windows-среду GitHub Actions
+    runs-on: windows-latest
+
+    # Последовательность шагов выполнения
+    steps:
+
+      # 1. Скачивание кода репозитория на виртуальную машину GitHub Actions
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Установка .NET SDK версии 8
+      # Это нужно, чтобы GitHub Actions мог выполнять dotnet restore/build/test/publish
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      # 3. Восстановление NuGet-пакетов для основной библиотеки
+      # Команда читает AutoServiceLibrary.csproj и скачивает нужные зависимости
+      - name: Restore library
+        run: dotnet restore AutoServiceLibrary/AutoServiceLibrary.csproj
+
+      # 4. Восстановление NuGet-пакетов для проекта тестов
+      # Нужно, чтобы тестовый проект получил MSTest/NUnit/xUnit и другие зависимости
+      - name: Restore tests
+        run: dotnet restore AutoServiceTests/AutoServiceTests.csproj
+
+      # 5. Сборка основной библиотеки в режиме Release
+      # --no-restore означает, что повторно восстанавливать пакеты не нужно,
+      # потому что restore уже был выполнен выше
+      - name: Build library
+        run: dotnet build AutoServiceLibrary/AutoServiceLibrary.csproj --configuration Release --no-restore
+
+      # 6. Сборка проекта тестов в режиме Release
+      # Тесты тоже нужно собрать перед запуском
+      - name: Build tests
+        run: dotnet build AutoServiceTests/AutoServiceTests.csproj --configuration Release --no-restore
+
+      # 7. Запуск модульных тестов
+      # --no-build означает, что проект не надо собирать повторно,
+      # потому что build уже был выполнен выше
+      - name: Run tests
+        run: dotnet test AutoServiceTests/AutoServiceTests.csproj --configuration Release --no-build
+
+      # 8. Публикация основной библиотеки
+      # Результат публикации будет сохранён в папку publish
+      - name: Publish library
+        run: dotnet publish AutoServiceLibrary/AutoServiceLibrary.csproj --configuration Release --output publish
+
+      # 9. Загрузка результата публикации как артефакта GitHub Actions
+      # После выполнения workflow этот файл/папку можно будет скачать во вкладке Actions
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          # Название артефакта, которое будет отображаться на GitHub
+          name: AutoServiceLibrary-DLL
+
+          # Папка, которую нужно сохранить как артефакт
+          path: publish

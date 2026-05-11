@@ -1,0 +1,54 @@
+name: CI-CD ExamLibrary
+
+on:
+  push:
+    branches:
+      - main
+      - master
+
+  pull_request:
+    branches:
+      - main
+      - master
+
+  workflow_dispatch:
+
+jobs:
+  build-test-publish:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Show files
+        run: dir
+
+      - name: Restore ExamLibrary
+        run: dotnet restore ExamLibrary/ExamLibrary.csproj
+
+      - name: Restore ExamTest
+        run: dotnet restore ExamTest/ExamTest.csproj
+
+      - name: Build ExamLibrary
+        run: dotnet build ExamLibrary/ExamLibrary.csproj --configuration Release --no-restore
+
+      - name: Build ExamTest
+        run: dotnet build ExamTest/ExamTest.csproj --configuration Release --no-restore
+
+      - name: Run unit tests
+        run: dotnet test ExamTest/ExamTest.csproj --configuration Release --no-build
+
+      - name: Publish ExamLibrary
+        run: dotnet publish ExamLibrary/ExamLibrary.csproj --configuration Release --output publish
+
+      - name: Upload DLL artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: ExamLibrary-DLL
+          path: publish

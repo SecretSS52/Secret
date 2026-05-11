@@ -1,0 +1,99 @@
+Создание проекта модульного теста. Синхронизация проекта модульного теста и рабочего проекта. Добавление тестовых классов и тестовых методов в проект тестирования.
+Пример проекта калькулятора
+namespace CalculatorLib
+{
+    public class Calculator
+    {
+        public int Sum(int a, int b)
+        {
+            return a + b;
+        }
+
+        public int Minus(int a, int b)
+        {
+            return a - b;
+        }
+
+        public int Multiply(int a, int b)
+        {
+            return a * b;
+        }
+
+        public double Divide(int a, int b)
+        {
+            if (b == 0)
+            {
+                throw new DivideByZeroException("Делить на ноль нельзя");
+            }
+
+            return (double)a / b;
+        }
+    }
+}
+
+Дальше тесты к нему
+using CalculatorLib;
+
+namespace CalculatorLibTests
+{
+    [TestClass]
+    public class CalculatorTests
+    {
+        [TestMethod]
+        public void Sum_TwoNumbers_ReturnsCorrectResult()
+        {
+            // Arrange — подготовка данных
+            Calculator calculator = new Calculator();
+
+            int a = 5;
+            int b = 3;
+
+            // Act — выполнение проверяемого метода
+            int result = calculator.Sum(a, b);
+
+            // Assert — проверка результата
+            Assert.AreEqual(8, result);
+        }
+
+        [TestMethod]
+        public void Minus_TwoNumbers_ReturnsCorrectResult()
+        {
+            Calculator calculator = new Calculator();
+
+            int result = calculator.Minus(10, 4);
+
+            Assert.AreEqual(6, result);
+        }
+
+        [TestMethod]
+        public void Multiply_TwoNumbers_ReturnsCorrectResult()
+        {
+            Calculator calculator = new Calculator();
+
+            int result = calculator.Multiply(6, 7);
+
+            Assert.AreEqual(42, result);
+        }
+
+        [TestMethod]
+        public void Divide_TwoNumbers_ReturnsCorrectResult()
+        {
+            Calculator calculator = new Calculator();
+
+            double result = calculator.Divide(10, 2);
+
+            Assert.AreEqual(5, result);
+        }
+
+        [TestMethod]
+        public void Divide_ByZero_ThrowsException()
+        {
+            Calculator calculator = new Calculator();
+
+            Assert.ThrowsException<DivideByZeroException>(() =>
+            {
+                calculator.Divide(10, 0);
+            });
+        }
+    }
+}

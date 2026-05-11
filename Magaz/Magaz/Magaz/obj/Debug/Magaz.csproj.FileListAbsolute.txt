@@ -1,0 +1,6 @@
+C:\Users\Danilka\Desktop\Magaz\Magaz\Magaz\bin\Debug\Magaz.dll
+C:\Users\Danilka\Desktop\Magaz\Magaz\Magaz\bin\Debug\Magaz.pdb
+C:\Users\Danilka\Desktop\Magaz\Magaz\Magaz\obj\Debug\Magaz.csproj.AssemblyReference.cache
+C:\Users\Danilka\Desktop\Magaz\Magaz\Magaz\obj\Debug\Magaz.csproj.CoreCompileInputs.cache
+C:\Users\Danilka\Desktop\Magaz\Magaz\Magaz\obj\Debug\Magaz.dll
+C:\Users\Danilka\Desktop\Magaz\Magaz\Magaz\obj\Debug\Magaz.pdb
